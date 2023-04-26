@@ -25,7 +25,7 @@ class egenciaStream(RESTStream):
     """egencia stream class."""
 
     # TODO: Set the API's base URL here:
-    url_base = "https://api.mysample.com"
+    url_base = "https://jsonplaceholder.typicode.com"
 
     # OR use a dynamic url_base:
     # @property
@@ -36,14 +36,14 @@ class egenciaStream(RESTStream):
     records_jsonpath = "$[*]"  # Or override `parse_response`.
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
 
-    @cached_property
-    def authenticator(self) -> _Auth:
-        """Return a new authenticator object.
+    # @cached_property
+    # def authenticator(self) -> _Auth:
+    #     """Return a new authenticator object.
 
-        Returns:
-            An authenticator instance.
-        """
-        return egenciaAuthenticator.create_for_stream(self)
+    #     Returns:
+    #         An authenticator instance.
+    #     """
+    #     return egenciaAuthenticator.create_for_stream(self)
 
     @property
     def http_headers(self) -> dict:
