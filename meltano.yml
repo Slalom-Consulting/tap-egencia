@@ -2,6 +2,7 @@ version: 1
 send_anonymous_usage_stats: true
 project_id: "tap-egencia"
 default_environment: test
+# TODO: Can create multiple environments, ex: name: dev
 environments:
 - name: test
 plugins:
@@ -28,3 +29,15 @@ plugins:
   - name: target-jsonl
     variant: andyh1203
     pip_url: target-jsonl
+# TODO: Configure a loader to point to target-eventbridge on Slalom-Consulting Github:
+
+# TODO: Schedule is how we can setup interval jobs on the tap to extract from the source. Might be more relevant for our Orchestrator
+schedules:
+# - name: daily-google-analytics-load
+#   interval: '@daily'
+#   extractor: tap-google-analytics
+#   loader: target-postgres
+#   transform: skip
+#   start_date: 2022-08-24 00:00:00
+#   env:
+#     SCHEDULE_SPECIFIC_ENV_VAR: schedule_specific_value
