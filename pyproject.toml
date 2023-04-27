@@ -34,7 +34,7 @@ s3 = ["fs-s3fs"]
 [tool.isort]
 profile = "black"
 multi_line_output = 3 # Vertical Hanging Indent
-src_paths = "tap_operations_travel"
+src_paths = "tap_egencia"
 
 [tool.mypy]
 python_version = "3.9"
@@ -46,4 +46,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 # CLI declaration
-tap-egencia = 'tap_operations_travel.tap:TapEgencia.cli'
+tap-egencia = 'tap_egencia.tap:TapEgencia.cli'
