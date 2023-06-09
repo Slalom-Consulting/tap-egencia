@@ -4,7 +4,7 @@ project_id: "tap-egencia"
 default_environment: test
 # TODO: Can create multiple environments, ex: name: dev
 environments:
-- name: test
+- name: dev
 plugins:
   extractors:
   - name: "tap-egencia"
@@ -17,14 +17,13 @@ plugins:
     - about
     - stream-maps
     config:
-      start_date: '2010-01-01T00:00:00Z'
-    settings:
-    # TODO: To configure using Meltano, declare settings and their types here:
-    - name: username
-    - name: password
-      kind: password
-    - name: start_date
-      value: '2010-01-01T00:00:00Z'
+  # TODO: Setup env for start_date
+      start_date: ''
+  # TODO: Setup env for end_date
+      end_date: ''
+      egencia_api_url: ${EGENCIA_BASE_URL}/v1/transactions
+  # TODO: Auth Tenant Domain if using auth.py file 
+      domain: ''
   loaders:
   - name: target-jsonl
     variant: andyh1203

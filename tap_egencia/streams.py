@@ -10,19 +10,10 @@ from tap_egencia.client import egenciaStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-
-# TODO: - Rename Stream to appropriately capture the dataStream and path. 
-#       - Override `UsersStream` and `GroupsStream` with your own stream definition.
-class UsersStream(egenciaStream):
+class TransactionsStream(egenciaStream):
     """Define custom stream."""
 
     primary_keys = ["id"]
-    path = '/comments'
-    name = "comments"
-    schema = th.PropertiesList(
-        th.Property("postId", th.IntegerType),
-        th.Property("id", th.IntegerType),
-        th.Property("name", th.StringType),
-        th.Property("email", th.StringType),
-        th.Property("body", th.StringType),
-    ).to_dict()
+    path = '/v1/transactions'
+    name = "Transactions Reporting"
+    schema = SCHEMAS_DIR / "transactions.json"
