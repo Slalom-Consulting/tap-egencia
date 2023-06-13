@@ -3,155 +3,152 @@ from singer_sdk.typing import (
     Property,
     NumberType,
     StringType,
-    BooleonType,
+    BooleanType,
     ArrayType,
-    ObjectType
-
 )
 from tap_egencia.schemas.utils.custom_objects import CustomObject
 
 class linksObject(CustomObject):
     properties = PropertiesList(
-        property("empty", BooleonType)
+        Property("empty", BooleanType)
     )
 
 class metadataObject(CustomObject):
     properties = PropertiesList(
-        property("current_page", NumberType),
-        property("latest_reconciled_date", StringType),
-        property("page_limit", NumberType),
-        property("total_pages", NumberType),
-        property("total_records", NumberType),
+        Property("current_page", NumberType),
+        Property("latest_reconciled_date", StringType),
+        Property("page_limit", NumberType),
+        Property("total_pages", NumberType),
+        Property("total_records", NumberType),
 
     )
 
 class durationObject(CustomObject):
     properties = PropertiesList(
-        property("end", StringType),
-        property("minutes", StringType),
-        property("start", StringType),
+        Property("end", StringType),
+        Property("minutes", StringType),
+        Property("start", StringType),
     )
 
 class identifierObject(CustomObject):
     properties = PropertiesList(
-        property("confirmation_number", StringType),
-        property("invoice_number", StringType),
-        property("itinerary_number", StringType),
-        property("pnr", StringType),
-        property("record_locator", StringType),
-        property("ticket_number", StringType),
+        Property("confirmation_number", StringType),
+        Property("invoice_number", StringType),
+        Property("itinerary_number", StringType),
+        Property("pnr", StringType),
+        Property("record_locator", StringType),
+        Property("ticket_number", StringType),
     )
 
 class paymentObject(CustomObject):
     properties = PropertiesList(
-        property("credit_card_bin", StringType),
-        property("credit_card_last4_digits", StringType),
-        property("credit_card_type", StringType),
+        Property("credit_card_bin", StringType),
+        Property("credit_card_last4_digits", StringType),
+        Property("credit_card_type", StringType),
     )
 
 class policyObject(CustomObject):
     properties = PropertiesList(
-        property("in_policy", StringType),
-        property("policy_reason_code", StringType),
-        property("policy_reason_description", StringType),
+        Property("in_policy", StringType),
+        Property("policy_reason_code", StringType),
+        Property("policy_reason_description", StringType),
     )
 
 class priceObject(CustomObject):
     properties = PropertiesList(
-        property("average_leg_amount", StringType),
-        property("average_leg_price", StringType),
-        property("average_segment_amount", StringType),
-        property("base", StringType),
-        property("base_amount", StringType),
-        property("best_fare_option", StringType),
-        property("change_fee", StringType),
-        property("change_fee_amount", StringType),
-        property("change_fees", StringType),
-        property("coupon_amount", StringType),
-        property("extra_guest_charges", StringType),
-        property("extra_person_amount", StringType),
-        property("fare_bases", StringType),
-        property("fee", StringType),
-        property("fees", StringType),
-        property("flight_amount", StringType),
-        property("goodwill_amount", StringType),
-        property("leg_amount", StringType),
-        property("lowest_logical_fare", StringType),
-        property("published_fare", StringType),
-        property("segment_amount", StringType),
-        property("tax", StringType),
-        property("tax_gst", StringType),
-        property("tax_hst", StringType),
-        property("tax_qst", StringType),
-        property("tax_vat", StringType),
-        property("taxes", StringType),
-        property("total", StringType),
-        property("transaction_amount", StringType),
-        property("transaction_amount_tax_gst", StringType),
-        property("transaction_amount_tax_hst", StringType),
-        property("transaction_amount_tax_qst", StringType),
-        property("transaction_amount_vat", StringType),
-        property("trip_amount", StringType),
-        property("true_ticket_amount", StringType),
+        Property("average_leg_amount", StringType),
+        Property("average_leg_price", StringType),
+        Property("average_segment_amount", StringType),
+        Property("base", StringType),
+        Property("base_amount", StringType),
+        Property("best_fare_option", StringType),
+        Property("change_fee", StringType),
+        Property("change_fee_amount", StringType),
+        Property("change_fees", StringType),
+        Property("coupon_amount", StringType),
+        Property("extra_guest_charges", StringType),
+        Property("extra_person_amount", StringType),
+        Property("fare_bases", StringType),
+        Property("fee", StringType),
+        Property("fees", StringType),
+        Property("flight_amount", StringType),
+        Property("goodwill_amount", StringType),
+        Property("leg_amount", StringType),
+        Property("lowest_logical_fare", StringType),
+        Property("published_fare", StringType),
+        Property("segment_amount", StringType),
+        Property("tax", StringType),
+        Property("tax_gst", StringType),
+        Property("tax_hst", StringType),
+        Property("tax_qst", StringType),
+        Property("tax_vat", StringType),
+        Property("taxes", StringType),
+        Property("total", StringType),
+        Property("transaction_amount", StringType),
+        Property("transaction_amount_tax_gst", StringType),
+        Property("transaction_amount_tax_hst", StringType),
+        Property("transaction_amount_tax_qst", StringType),
+        Property("transaction_amount_vat", StringType),
+        Property("trip_amount", StringType),
+        Property("true_ticket_amount", StringType),
     )
 
 class travelDatesObject(CustomObject):
     properties = PropertiesList(
-        property("travel_end_date", StringType),
-        property("travel_start_date", StringType),
+        Property("travel_end_date", StringType),
+        Property("travel_start_date", StringType),
     )
 
 class travelerObject(CustomObject):
     properties = PropertiesList(
-        property("email", StringType),
-        property("group", StringType),
-        property("is_guest", StringType),
-        property("meeting_attendee_group", StringType),
-        property("name", StringType),
+        Property("email", StringType),
+        Property("group", StringType),
+        Property("is_guest", StringType),
+        Property("meeting_attendee_group", StringType),
+        Property("name", StringType),
 
     )
 
 class transactionsObject(CustomObject):
     properties = ArrayType(PropertiesList(
-        property("advance_purchase_days", StringType),
-        property("advance_purchase_window", StringType),
-        property("ancillary_type", StringType),
-        property("booking_method", StringType),
-        property("cabin_class", StringType),
-        property("cabin_class_name", StringType),
-        property("class_of_service", StringType),
-        property("client_code", StringType),
-        property("company_name", StringType),
-        property("custom_data_fields", ObjectType),
-        property("department", StringType),
-        property("duration", durationObject),
-        property("geography_type", StringType),
-        property("identifier", identifierObject),
-        property("invoice_date", StringType),
-        property("is_active", StringType),
-        property("is_agent_assisted", StringType),
-        property("is_special_request", StringType),
-        property("line_of_business", StringType),
-        property("location", StringType),
-        property("meeting_name", StringType),
-        property("parent_client_code", StringType),
-        property("payment_instrument_info", paymentObject),
-        property("point_of_sale", StringType),
-        property("point_of_sale_country", StringType),
-        property("policy", policyObject),
-        property("price", priceObject),
-        property("purchase_count", StringType),
-        property("rate_type", StringType),
-        property("segment_count", StringType),
-        property("ticket_code", StringType),
-        property("ticket_status", StringType),
-        property("transaction_date", StringType),
-        property("transaction_status", StringType),
-        property("transaction_type", StringType),
-        property("travel_dates", travelDatesObject),
-        property("traveler", travelerObject),
-        property("vendor", StringType),
-        property("vendor_name", StringType),
-    )
-   )
+        Property("advance_purchase_days", StringType),
+        Property("advance_purchase_window", StringType),
+        Property("ancillary_type", StringType),
+        Property("booking_method", StringType),
+        Property("cabin_class", StringType),
+        Property("cabin_class_name", StringType),
+        Property("class_of_service", StringType),
+        Property("client_code", StringType),
+        Property("company_name", StringType),
+        # Property("custom_data_fields", ObjectType),
+        Property("department", StringType),
+        Property("duration", durationObject),
+        Property("geography_type", StringType),
+        Property("identifier", identifierObject),
+        Property("invoice_date", StringType),
+        Property("is_active", StringType),
+        Property("is_agent_assisted", StringType),
+        Property("is_special_request", StringType),
+        Property("line_of_business", StringType),
+        Property("location", StringType),
+        Property("meeting_name", StringType),
+        Property("parent_client_code", StringType),
+        Property("payment_instrument_info", paymentObject),
+        Property("point_of_sale", StringType),
+        Property("point_of_sale_country", StringType),
+        Property("policy", policyObject),
+        Property("price", priceObject),
+        Property("purchase_count", StringType),
+        Property("rate_type", StringType),
+        Property("segment_count", StringType),
+        Property("ticket_code", StringType),
+        Property("ticket_status", StringType),
+        Property("transaction_date", StringType),
+        Property("transaction_status", StringType),
+        Property("transaction_type", StringType),
+        Property("travel_dates", travelDatesObject),
+        Property("traveler", travelerObject),
+        Property("vendor", StringType),
+        Property("vendor_name", StringType),)
+        )
     

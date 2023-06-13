@@ -14,7 +14,7 @@ STREAM_TYPES = [
     TransactionsStream,
 ]
 
-class Tap_Egencia(Tap):
+class TapEgencia(Tap):
     """egencia tap class."""
 
     name = "tap-egencia"
@@ -31,7 +31,7 @@ class Tap_Egencia(Tap):
             description="The end record date to sync",
         ),
         th.Property(
-            "api_url",
+            "egencia_base_url",
             th.StringType,
             default="https://api.mysample.com",
             description="The url for the API service",
@@ -42,4 +42,4 @@ class Tap_Egencia(Tap):
         return [stream_class(tap=self) for stream_class in STREAM_TYPES]    
 
 if __name__ == "__main__":
-    Tap_Egencia.cli()
+    TapEgencia.cli()

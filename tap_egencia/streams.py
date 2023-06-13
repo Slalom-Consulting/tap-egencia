@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from pathlib import Path
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
@@ -24,14 +26,16 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class TransactionsStream(egenciaStream):
     """Define custom stream."""
+    @property
+    def egencia_base_url(self) -> str:
+        return self.config['egencia_base_url']
 
-    name = "tap-egencia"
-    # url_base = '' may not need this
+    name = "transactions-api"
+    url_base = egencia_base_url
     path = '/bi/api/v1/transactions'
-    primary_keys = ["id"]
     schema = PropertiesList(
-        property("links", linksObject),
-        property("metadata", metadataObject),
-        property("report_id", StringType),
-        property("transactions", transactionsObject),
-    ).to_dict()
+        Property("links", linksObject),
+        Property("metadata", metadataObject),
+        Property("report_id", StringType),
+        Property("transactions", transactionsObject),
+        ).to_dict()

@@ -1,8 +1,7 @@
 version: 1
 send_anonymous_usage_stats: true
 project_id: "tap-egencia"
-default_environment: test
-# TODO: Can create multiple environments, ex: name: dev
+default_environment: dev
 environments:
 - name: dev
 plugins:
@@ -11,24 +10,18 @@ plugins:
     namespace: "tap_egencia"
     pip_url: -e .
     capabilities:
-    - state
-    - catalog
-    - discover
     - about
     - stream-maps
     config:
   # TODO: Setup env for start_date
-      start_date: ''
+      start_date: "2019-01-01 09:00:00"
   # TODO: Setup env for end_date
-      end_date: ''
-      egencia_api_url: ${EGENCIA_BASE_URL}/v1/transactions
-  # TODO: Auth Tenant Domain if using auth.py file 
-      domain: ''
+      end_date: "2020-01-01 09:00:00"
+      egencia_base_url: ${EGENCIA_BASE_URL}
   loaders:
   - name: target-jsonl
     variant: andyh1203
     pip_url: target-jsonl
-# TODO: Configure a loader to point to target-eventbridge on Slalom-Consulting Github:
 
 # TODO: Schedule is how we can setup interval jobs on the tap to extract from the source. Might be more relevant for our Orchestrator
 schedules:

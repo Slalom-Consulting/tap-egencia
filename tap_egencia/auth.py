@@ -1,36 +1,33 @@
-"""egencia Authentication."""
+import sys
+import os
+import requests
+import json
+import logging
+# from tap_egencia.secret import get_secret
+from dotenv import load_dotenv
 
-from __future__ import annotations
 
-from tap_egencia.secret import secret 
 
-from singer_sdk.authenticators import OAuthAuthenticator, SingletonMeta
+logging.captureWarnings(True)
 
-class egenciaAuthenticator(OAuthAuthenticator):
-    """Authenticator class for egencia."""
+def get_new_token():
+	load_dotenv()
+	baseUrl = os.getenv('EGENCIA_BASE_URL')
+	auth_server_url = f'{baseUrl}/auth/v1/token'
+	client_id = os.getenv('EGENCIA_CLIENT_ID')
+	client_secret = os.getenv('EGENCIA_SECRET_ID')
 
-    @property
-    def domain(self) -> str:
-        return self.config["domain"]
-    
-    @property
-    def auth_endpoint():
-        baseUrl = secret.get_secret('egenciaBaseUrl')
-        return f"{baseUrl}/auth/v1/token"
+	token_req_payload = {'grant_type': 'client_credentials'}
 
-    @property
-    def oauth_request_body() -> dict:
-        clientId = secret.get_secret('egenciaClientId')
-        clientSecret = secret.get_secret('egenciaClientSecret')
-  
-        return {
-            'client_id': clientId,
-            'client_secret': clientSecret,
-            "grant_type": "client_credentials",
-        }
-
-    @classmethod
-    def create_for_stream(cls, stream) -> "egenciaAuthenticator":
-        return cls(
-            stream=stream,
-        )
+	token_response = requests.post(
+			url=auth_server_url,
+			data=token_req_payload,
+			auth=(client_id, client_secret)
+	)
+			 
+	if token_response.status_code != 200:
+			print("Failed to obtain token from the OAuth 2.0 server", file=sys.stderr)
+			sys.exit(1)
+	else:
+			tokens = json.loads(token_response.text)
+			return tokens['access_token']
