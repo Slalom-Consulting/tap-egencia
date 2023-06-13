@@ -12,7 +12,7 @@ from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 
 # from tap_egencia.auth import egenciaAuthenticator
-from tap_egencia.auth2 import get_new_token
+from auth2 import get_new_token
 
 if sys.version_info >= (3, 8):
     from functools import cached_property
@@ -26,12 +26,14 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class egenciaStream(RESTStream):
     """egencia stream class."""
+    #  def __init__(self, tap: Tap):
+    #     super().__init__(tap)
 
     @property
-    def url_base(self) -> str:
-        return self.config["egencia_api_url"]
-    
-
+    def ApiUrl(self) -> str:
+        print('setting api-url')
+        return self.config.get["egencia_api_url"]
+ 
     records_jsonpath = "$[*]"  # Or override `parse_response`.
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
 
@@ -54,7 +56,6 @@ class egenciaStream(RESTStream):
         headers['Authorization'] = f'Bearer ${token}'
         headers['Accept'] = 'application/hal+json'
         headers['Content-Type'] = 'application/x-www-form-urlencoded'
-
         return headers
 
     def prepare_request_payload(

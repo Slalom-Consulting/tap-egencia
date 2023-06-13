@@ -2,7 +2,7 @@ import sys
 import requests
 import json
 import logging
-from tap_egencia.secret import secret 
+import secret 
 
 
 logging.captureWarnings(True)
