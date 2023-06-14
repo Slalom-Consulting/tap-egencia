@@ -33,7 +33,6 @@ class TapEgencia(Tap):
         th.Property(
             "egencia_base_url",
             th.StringType,
-            default="https://api.mysample.com",
             description="The url for the API service",
         ),
     ).to_dict()

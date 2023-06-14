@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import os
+import requests
 
 from pathlib import Path
 
@@ -16,6 +16,8 @@ from singer_sdk.typing import (
     StringType,
 )
 
+from typing import Any, Dict, Iterable, Optional
+
 from tap_egencia.schemas.reporting import (
     linksObject,
     metadataObject,
@@ -25,17 +27,38 @@ from tap_egencia.schemas.reporting import (
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class TransactionsStream(egenciaStream):
-    """Define custom stream."""
-    @property
-    def egencia_base_url(self) -> str:
-        return self.config['egencia_base_url']
+    """Define reporting/transactions stream."""
 
     name = "transactions-api"
-    url_base = egencia_base_url
-    path = '/bi/api/v1/transactions'
     schema = PropertiesList(
         Property("links", linksObject),
         Property("metadata", metadataObject),
         Property("report_id", StringType),
         Property("transactions", transactionsObject),
         ).to_dict()
+    authenticator = None
+    url_base = ""
+    
+    def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
+        authenticator = super().authenticator
+        url_base = super().url_base
+        
+        self.path = "/bi/api/v1/transactions"
+        start_date = self.config['start_date']
+        end_date = self.config['end_date']
+
+        session = requests.Session()
+        session.headers = authenticator.auth_headers
+
+        transaction_request = session.prepare_request(
+            requests.Request(
+                method="POST",
+                url=f"{url_base}{self.path}",
+                json={
+                    "format": "json",
+                    "fields": {"start_date": f"{start_date}", "end_date": f"{end_date}"},
+                },
+            )
+        )
+
+        return session.send(transaction_request)

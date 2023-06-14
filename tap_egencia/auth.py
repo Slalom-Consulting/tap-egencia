@@ -1,33 +1,38 @@
-import sys
-import os
-import requests
-import json
-import logging
-# from tap_egencia.secret import get_secret
-from dotenv import load_dotenv
+"""Auth0 Authentication."""
 
+from singer_sdk.authenticators import OAuthAuthenticator, SingletonMeta
 
+class Auth0Authenticator(OAuthAuthenticator, metaclass=SingletonMeta):
+    """Authenticator class for Auth0."""
 
-logging.captureWarnings(True)
+    @property
+    def domain(self) -> str:
+        return self.config["egencia_base_url"]
 
-def get_new_token():
-	load_dotenv()
-	baseUrl = os.getenv('EGENCIA_BASE_URL')
-	auth_server_url = f'{baseUrl}/auth/v1/token'
-	client_id = os.getenv('EGENCIA_CLIENT_ID')
-	client_secret = os.getenv('EGENCIA_SECRET_ID')
+    @property
+    def auth_endpoint(self) -> str:
+        return f"{self.domain}/auth/v1/token"
+    
+    @property
+    def client_id(self) -> str:
+        return self.config['client_id']
+    
+    @property
+    def client_secret(self) -> str:
+        return self.config['client_secret']
 
-	token_req_payload = {'grant_type': 'client_credentials'}
+    @property
+    def oauth_request_body(self) -> dict:
+        """Define the OAuth request body for the Auth0 API."""
 
-	token_response = requests.post(
-			url=auth_server_url,
-			data=token_req_payload,
-			auth=(client_id, client_secret)
-	)
-			 
-	if token_response.status_code != 200:
-			print("Failed to obtain token from the OAuth 2.0 server", file=sys.stderr)
-			sys.exit(1)
-	else:
-			tokens = json.loads(token_response.text)
-			return tokens['access_token']
+        return {
+            "grant_type": "client_credentials",
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+        }
+
+    @classmethod
+    def create_for_stream(cls, stream) -> "Auth0Authenticator":
+        return cls(
+            stream=stream,
+        )

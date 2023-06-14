@@ -13,23 +13,12 @@ plugins:
     - about
     - stream-maps
     config:
-  # TODO: Setup env for start_date
       start_date: "2019-01-01 09:00:00"
-  # TODO: Setup env for end_date
       end_date: "2020-01-01 09:00:00"
       egencia_base_url: ${EGENCIA_BASE_URL}
+      client_id: ${EGENCIA_CLIENT_ID}
+      client_secret: ${EGENCIA_SECRET_ID}
   loaders:
   - name: target-jsonl
     variant: andyh1203
     pip_url: target-jsonl
-
-# TODO: Schedule is how we can setup interval jobs on the tap to extract from the source. Might be more relevant for our Orchestrator
-schedules:
-# - name: daily-google-analytics-load
-#   interval: '@daily'
-#   extractor: tap-google-analytics
-#   loader: target-postgres
-#   transform: skip
-#   start_date: 2022-08-24 00:00:00
-#   env:
-#     SCHEDULE_SPECIFIC_ENV_VAR: schedule_specific_value
