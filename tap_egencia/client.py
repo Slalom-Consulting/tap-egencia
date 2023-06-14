@@ -35,10 +35,3 @@ class egenciaStream(RESTStream):
     def authenticator(self) -> Auth0Authenticator:
         """Return a new authenticator object."""
         return Auth0Authenticator.create_for_stream(self)
-
-    @property
-    def http_headers(self) -> dict:
-        """Return a http_headers for request."""
-        headers = {"Accept": "application/hal+json"}
-
-        return headers 

@@ -49,16 +49,17 @@ class TransactionsStream(egenciaStream):
 
         session = requests.Session()
         session.headers = authenticator.auth_headers
+        session.headers["Accept"] = "application/hal+json"
+
+        self.body = {"start_date": f"{start_date}", "end_date": f"{end_date}"}
 
         transaction_request = session.prepare_request(
             requests.Request(
                 method="POST",
                 url=f"{url_base}{self.path}",
-                json={
-                    "format": "json",
-                    "fields": {"start_date": f"{start_date}", "end_date": f"{end_date}"},
-                },
+                json=self.body
             )
         )
-
-        return session.send(transaction_request)
+        
+        response = session.send(transaction_request)
+        return response
