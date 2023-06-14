@@ -9,15 +9,15 @@ API_URL = "https://api.mysample.com"
 mock_responses_path = "tap_egencia/tests/mock_responses"
 
 mock_config = {
-    "organization_members": {
+    "authorization_token": {
         "type": "stream",
-        "endpoint": "/v2/orgs/{organization_id}/members",
-        "file": "organization_members.json",
+        "endpoint": "/auth/v1/token",
+        "file": "auth.json",
     }
 }
 
 
-def mock_api(func, SAMPLE_CONFIG):
+def mock_auth_api(func, SAMPLE_CONFIG):
     """Mock API."""
 
     def wrapper():
@@ -44,23 +44,23 @@ def mock_api(func, SAMPLE_CONFIG):
     wrapper()
 
 
-mock_param_config = {
+mock_transactions_config = {
     "organization_members": {
         "type": "stream",
-        "endpoint": "/v2/orgs/{organization_id}/members?active=true&license=full",
-        "file": "organization_members_parameter.json",
+        "endpoint": "/bi/api/v1/transactions",
+        "file": "transactions.json",
     }
 }
 
 
-def mock_param_api(func, SAMPLE_CONFIG):
+def mock_transactions_api(func, SAMPLE_CONFIG):
     """Mock API."""
-    mock_config = mock_param_config
+    mock_config = mock_transactions_config
 
     def wrapper():
         with requests_mock.Mocker() as m:
             for k, v in mock_config.items():
-                path = f"{mock_responses_path}/{v['file']}"
+                path = f"tap_egencia/schemas/{v['file']}"
 
                 if v["type"] == "stream":
                     endpoint = v["endpoint"]
