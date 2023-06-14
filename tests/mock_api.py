@@ -12,7 +12,7 @@ mock_config = {
     "authorization_token": {
         "type": "stream",
         "endpoint": "/auth/v1/token",
-        "file": "auth.json",
+        "file": "mock_auth.json",
     }
 }
 
