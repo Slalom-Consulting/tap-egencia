@@ -12,8 +12,8 @@ from tests.mock_api import mock_auth_api, mock_transactions_api
 
 SAMPLE_CONFIG = {
     "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    # "egencia_base_url": "https://api.mysample.com"
+    "end_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
+    "egencia_base_url": "https://api.mysample.com"
 }
 
 

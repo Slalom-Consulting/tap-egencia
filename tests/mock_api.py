@@ -6,7 +6,7 @@ import requests_mock
 
 API_URL = "https://api.mysample.com"
 
-mock_responses_path = "tap_egencia/tests/mock_responses"
+mock_responses_path = "tests/mock_responses"
 
 mock_config = {
     "authorization_token": {
