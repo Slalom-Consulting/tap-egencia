@@ -2,27 +2,64 @@
 
 from __future__ import annotations
 
+import requests
+
 from pathlib import Path
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
 from tap_egencia.client import egenciaStream
 
+from singer_sdk.typing import (
+    PropertiesList,
+    Property,
+    StringType,
+)
+
+from typing import Any, Dict, Iterable, Optional
+
+from tap_egencia.schemas.reporting import (
+    linksObject,
+    metadataObject,
+    transactionsObject
+)
+
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
+class TransactionsStream(egenciaStream):
+    """Define reporting/transactions stream."""
 
-# TODO: - Rename Stream to appropriately capture the dataStream and path. 
-#       - Override `UsersStream` and `GroupsStream` with your own stream definition.
-class UsersStream(egenciaStream):
-    """Define custom stream."""
+    name = "transactions-api"
+    schema = PropertiesList(
+        Property("links", linksObject),
+        Property("metadata", metadataObject),
+        Property("report_id", StringType),
+        Property("transactions", transactionsObject),
+        ).to_dict()
+    authenticator = None
+    url_base = ""
+    
+    def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
+        authenticator = super().authenticator
+        url_base = super().url_base
+        
+        self.path = "/bi/api/v1/transactions"
+        start_date = self.config['start_date']
+        end_date = self.config['end_date']
 
-    primary_keys = ["id"]
-    path = '/comments'
-    name = "comments"
-    schema = th.PropertiesList(
-        th.Property("postId", th.IntegerType),
-        th.Property("id", th.IntegerType),
-        th.Property("name", th.StringType),
-        th.Property("email", th.StringType),
-        th.Property("body", th.StringType),
-    ).to_dict()
+        session = requests.Session()
+        session.headers = authenticator.auth_headers
+        session.headers["Accept"] = "application/hal+json"
+
+        self.body = {"start_date": f"{start_date}", "end_date": f"{end_date}"}
+
+        transaction_request = session.prepare_request(
+            requests.Request(
+                method="POST",
+                url=f"{url_base}{self.path}",
+                json=self.body
+            )
+        )
+        
+        response = session.send(transaction_request)
+        return response
