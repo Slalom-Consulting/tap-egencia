@@ -11,9 +11,20 @@ from requests_mock.exceptions import NoMockAddress
 from tests.mock_api import mock_auth_api, mock_transactions_api
 
 SAMPLE_CONFIG = {
-    "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    "end_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    "egencia_base_url": "https://api.mysample.com"
+    # yyyy-MM-dd HH:mm:ss
+    # "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%m/%d/%Y, %H:%M:%S"),
+    # "end_date": datetime.datetime.now(datetime.timezone.utc).strftime("%m/%d/%Y, %H:%M:%S"),
+    "start_date": "2023-01-01 09:00:00",
+    "end_date": "2023-06-06 09:00:00",
+    "egencia_base_url": "https://apis.egencia.com",
+    "domain": "https://apis.egencia.com",
+    "client_id": "someclientid",
+    "client_secret": "someclientsecret",
+    "oauth_request_body": {
+        "grant_type": "client_credentials",
+        "client_id": "someclientid",
+        "client_secret": "someclientsecret",
+    }
 }
 
 
@@ -25,6 +36,19 @@ def test_transactions_tap_tests():
         if test.__name__ in ("_test_stream_connections"):
             mock_transactions_api(test, config)
             continue
+        # if test.__name__ in ("_test_stream_connections"):
+        #     mock_api(test)
+        #     continue
+            # try:
+                # mock_auth_api(test)
+            #     mock_transactions_api(test)
+            # except requests_mock.exceptions.NoMockAddress:
+            #     if requests_mock.exceptions.NoMockAddress == "POST https://apis.egencia.com/auth/v1/token":
+            #         continue
+            # except Exception:
+            #     assert False
+            # mock_transactions_api(test)
+            # continue
 
         test()
 

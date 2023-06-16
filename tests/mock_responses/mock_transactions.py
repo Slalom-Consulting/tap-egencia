@@ -8,7 +8,13 @@ from singer_sdk.typing import (
     Property,
 )
 
-schema = PropertiesList(
+def schema() -> dict:
+    return PropertiesList(
         Property("links", linksObject),
         Property("metadata", metadataObject),
         ).to_dict()
+
+# schema = PropertiesList(
+#         Property("links", linksObject),
+#         Property("metadata", metadataObject),
+#         ).to_dict()
