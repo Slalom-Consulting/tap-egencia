@@ -1,24 +1,32 @@
-"""Tests standard tap features using the built-in SDK tests library."""
+# """Tests the tap using a mock base credentials config."""
 
-# import datetime
+# import unittest
 
-# from singer_sdk.testing import get_tap_test_class
+# import responses
+# import singer
 
-# from tap_egencia.tap import TapEgencia
-
-
-# SAMPLE_CONFIG = {
-#     "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
-#     # TODO: Initialize minimal tap config
-# }
+# import tap_auth0.tests.utils as test_utils
+# from tap_egencia.tap import TapAuth0
 
 
-# Run standard built-in tap tests from the SDK:
-# TestTapEgencia = get_tap_test_class(
-#     tap_class=TapEgencia,
-#     config=SAMPLE_CONFIG
-# )
+# class TestTapAuth0Sync(unittest.TestCase):
+#     """Test class for tap-auth0 using base credentials"""
 
-# TODO: Create additional tests as appropriate for your tap.
+#     def setUp(self):
+#         self.mock_config = {
+#             "client_id": "1234",
+#             "client_secret": "1234",
+#             "domain": "test.auth0.com",
+#         }
+#         responses.reset()
+#         del test_utils.SINGER_MESSAGES[:]
 
+#         singer.write_message = test_utils.accumulate_singer_messages
 
+#     def test_base_credentials_discovery(self):
+#         """Test basic discover sync"""
+
+#         catalog = TapAuth0(self.mock_config).discover_streams()
+
+#         # expect valid catalog to be discovered
+#         self.assertEqual(len(catalog), 3, "Total streams from default catalog")
