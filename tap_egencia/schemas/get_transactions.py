@@ -151,4 +151,3 @@ class transactionsObject(CustomObject):
         Property("vendor", StringType),
         Property("vendor_name", StringType),)
         )
-    

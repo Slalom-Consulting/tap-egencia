@@ -1,20 +1,22 @@
-from tap_egencia.schemas.reporting import (
-    linksObject,
-    metadataObject
-)
-
 from singer_sdk.typing import (
     PropertiesList,
     Property,
 )
+from tap_egencia.schemas.utils.custom_objects import CustomObject
 
-def schema() -> dict:
-    return PropertiesList(
-        Property("links", linksObject),
+from singer_sdk.typing import (
+    PropertiesList,
+    Property,
+    StringType
+)
+from tap_egencia.schemas.post_transactions import (
+    linksObject,
+    metadataObject
+)
+
+class schema(CustomObject):
+    properties = PropertiesList(
+        Property("report_id", StringType),
         Property("metadata", metadataObject),
-        ).to_dict()
-
-# schema = PropertiesList(
-#         Property("links", linksObject),
-#         Property("metadata", metadataObject),
-#         ).to_dict()
+        Property("_links", linksObject),
+        ).to_dict

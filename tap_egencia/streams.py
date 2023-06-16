@@ -8,18 +8,20 @@ from pathlib import Path
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
+from singer_sdk.helpers.jsonpath import extract_jsonpath
+
 from tap_egencia.client import egenciaStream
 
 from singer_sdk.typing import (
     PropertiesList,
     Property,
-    StringType,
+    StringType
 )
 
 from typing import Any, Dict, Iterable, Optional
 
-from tap_egencia.schemas.reporting import (
-    linksObject,
+
+from tap_egencia.schemas.get_transactions import (
     metadataObject,
     transactionsObject
 )
@@ -31,13 +33,14 @@ class TransactionsStream(egenciaStream):
 
     name = "transactions-api"
     schema = PropertiesList(
-        Property("links", linksObject),
-        Property("metadata", metadataObject),
         Property("report_id", StringType),
+        Property("metadata", metadataObject),
         Property("transactions", transactionsObject),
         ).to_dict()
     authenticator = None
-    url_base = ""
+
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        return [] if response.status_code == 400 else super().parse_response(response)
     
     def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
         authenticator = super().authenticator
@@ -50,16 +53,31 @@ class TransactionsStream(egenciaStream):
         session = requests.Session()
         session.headers = authenticator.auth_headers
         session.headers["Accept"] = "application/hal+json"
+        session.headers["Content-Type"] = "application/json"
 
         self.body = {"start_date": f"{start_date}", "end_date": f"{end_date}"}
 
-        transaction_request = session.prepare_request(
+        post_transaction_request = session.prepare_request(
             requests.Request(
                 method="POST",
-                url=f"{url_base}{self.path}",
+                url= url_base + self.path,
                 json=self.body
             )
         )
+
+        post_transaction_response = self._request(post_transaction_request, None)
+        report_id = post_transaction_response.json()["report_id"]
+        total_pages = post_transaction_response.json()["metadata"]["total_pages"]
+
+        self.path = f"/bi/api/v1/transactions/{report_id}?page={total_pages}"
+
+        get_transaction_request = session.prepare_request(
+            requests.Request(
+                "GET",
+                url_base + self.path,
+            ),
+        )
+
+        get_transaction_response = self._request(get_transaction_request, None)
         
-        response = session.send(transaction_request)
-        return response
+        return super().parse_response(get_transaction_response) 
