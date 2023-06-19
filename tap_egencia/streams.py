@@ -42,13 +42,8 @@ class TransactionsStream(egenciaStream):
         url_base = super().url_base
         start_date = super().start_date
         end_date = super().end_date
-
-        today = datetime.datetime.now()
-        n_days_ago = datetime.datetime.now() - datetime.timedelta(7)
-
         
         self.path = "/bi/api/v1/transactions"
-
 
         session = requests.Session()
         session.headers = authenticator.auth_headers
@@ -56,9 +51,11 @@ class TransactionsStream(egenciaStream):
         session.headers["Content-Type"] = "application/json"
 
         if start_date == None:
+            n_days_ago = datetime.datetime.now() - datetime.timedelta(7)
             start_date = n_days_ago.strftime("%Y-%m-%d %H:%M:%S")
    
         if end_date == None:
+            today = datetime.datetime.now()
             end_date = today.strftime("%Y-%m-%d %H:%M:%S")
 
         self.body = {"start_date": f"{start_date}", "end_date": f"{end_date}"}
@@ -101,5 +98,6 @@ class TransactionsStream(egenciaStream):
             case 500:
                 raise Exception("Internal Server Error: unable to process request.")
             case _:
-                raise Exception(get_transaction_response.status_code)
+            # Return Status Code, Textual Reason for error and response body of error if occurance not listed above
+                raise Exception(get_transaction_response.status_code, get_transaction_response.reason, get_transaction_response.content)
 

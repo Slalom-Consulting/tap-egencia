@@ -36,6 +36,16 @@ class TapEgencia(Tap):
             th.StringType,
             description="The url for the API service",
         ),
+        th.Property(
+            "client_id",
+            th.StringType,
+            description="client Id for Egencia API",
+        ),
+        th.Property(
+            "client_secret",
+            th.StringType,
+            description="client secret for Egencia API",
+        ),
     ).to_dict()
 
     def discover_streams(self) -> list[Stream]:
