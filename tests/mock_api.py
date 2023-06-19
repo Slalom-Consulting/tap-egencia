@@ -4,52 +4,25 @@ import json
 
 import requests_mock
 
-from tap_egencia.schemas.reporting import (
-    linksObject,
-    metadataObject
-)
-
-from singer_sdk.typing import (
-    PropertiesList,
-    Property,
-)
-
-schema = PropertiesList(
-        Property("links", linksObject),
-        Property("metadata", metadataObject),
-        ).to_dict()
-
-
 API_URL = "https://apis.egencia.com"
 
 mock_responses_path = "tests/mock_responses"
 
-mock_auth_config = {
-    "authorization_token": {
-        "type": "stream",
-        "endpoint": "/auth/v1/token",
-        "file": "mock_auth.json",
-    }
-}
-
-mock_transactions_config = {
-    "transactions_api": {
-        "type": "stream",
-        "endpoint": "/bi/api/v1/transactions",
-        "file": "transactions.json",
-    }
-}
-
 mock_config = {
     "authorization_token": {
-        "type": "auth",
+        "type": "post",
         "endpoint": "/auth/v1/token",
         "file": "mock_auth.json",
     },
-    "transactions-api": {
-        "type": "stream",
+    "transactions": {
+        "type": "post",
         "endpoint": "/bi/api/v1/transactions",
         "file": "mock_transactions.json",
+    },
+    "transactions-page-1": {
+        "type": "get",
+        "endpoint": "/bi/api/v1/transactions/f5d4d0f8-7243-4c2d-b2ab-bce09fbf4053?page=1",
+        "file": "mock_transactions_page1.json",
     }
 }
 
@@ -59,79 +32,20 @@ def mock_api(func):
     def wrapper():
         with requests_mock.Mocker() as m:
             for k, v in mock_config.items():
-
-                if v["type"] == "stream":
-                    path = f"{mock_responses_path}/{v['file']}"
-                    endpoint = v["endpoint"]
-
-                    url = f"{API_URL}{endpoint}"
-
-                    with open(path, "r") as f:
-                        response = json.load(f)
-                        print(response)
-                        print(type(response))
-                        decodedresponse = response.decode()
-                        print(decodedresponse)
-                        print(type(decodedresponse))
-                    # response = schema
-
-                    m.post(url, json=decodedresponse)
-
-                elif v["type"] == "auth":
-                    path = f"{mock_responses_path}/{v['file']}"
-                    url = v["endpoint"]
-
-                    with open(path, "r") as f:
-                        response = json.load(f)
-
-                    m.post(url, json=response)
-
-            func()
-
-    wrapper()
-
-
-def mock_auth_api(func):
-    """Mock API."""
-
-    def wrapper():
-        with requests_mock.Mocker() as m:
-            for k, v in mock_auth_config.items():
                 path = f"{mock_responses_path}/{v['file']}"
 
-                if v["type"] == "stream":
-                    endpoint = v["endpoint"]
+                endpoint = v["endpoint"]
 
-                    url = f"{API_URL}{endpoint}"
+                url = f"{API_URL}{endpoint}"
 
-                    with open(path, "r") as f:
-                        response = json.load(f)
+                with open(path, "r") as f:
+                    response = json.load(f)
 
+                if v["type"] == "post":
                     m.post(url, json=response)
 
-            func()
-
-    wrapper()
-
-
-def mock_transactions_api(func):
-    """Mock API."""
-    mock_config = mock_transactions_config
-
-    def wrapper():
-        with requests_mock.Mocker() as m:
-            for k, v in mock_config.items():
-                path = f"tap_egencia/schemas/{v['file']}"
-
-                if v["type"] == "stream":
-                    endpoint = v["endpoint"]
-
-                    url = f"{API_URL}{endpoint}"
-
-                    with open(path, "r") as f:
-                        response = json.load(f)
-
-                    m.post(url, json=response)
+                elif v["type"] == "get":
+                    m.get(url, json=response)
 
             func()
 

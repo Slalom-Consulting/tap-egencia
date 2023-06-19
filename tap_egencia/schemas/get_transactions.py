@@ -8,10 +8,10 @@ from singer_sdk.typing import (
 )
 from tap_egencia.schemas.utils.custom_objects import CustomObject
 
+
 class linksObject(CustomObject):
-    properties = PropertiesList(
-        Property("empty", BooleanType)
-    )
+    properties = PropertiesList(Property("empty", BooleanType))
+
 
 class metadataObject(CustomObject):
     properties = PropertiesList(
@@ -20,8 +20,8 @@ class metadataObject(CustomObject):
         Property("page_limit", NumberType),
         Property("total_pages", NumberType),
         Property("total_records", NumberType),
-
     )
+
 
 class durationObject(CustomObject):
     properties = PropertiesList(
@@ -29,6 +29,7 @@ class durationObject(CustomObject):
         Property("minutes", StringType),
         Property("start", StringType),
     )
+
 
 class identifierObject(CustomObject):
     properties = PropertiesList(
@@ -40,6 +41,7 @@ class identifierObject(CustomObject):
         Property("ticket_number", StringType),
     )
 
+
 class paymentObject(CustomObject):
     properties = PropertiesList(
         Property("credit_card_bin", StringType),
@@ -47,12 +49,14 @@ class paymentObject(CustomObject):
         Property("credit_card_type", StringType),
     )
 
+
 class policyObject(CustomObject):
     properties = PropertiesList(
         Property("in_policy", StringType),
         Property("policy_reason_code", StringType),
         Property("policy_reason_description", StringType),
     )
+
 
 class priceObject(CustomObject):
     properties = PropertiesList(
@@ -93,11 +97,13 @@ class priceObject(CustomObject):
         Property("true_ticket_amount", StringType),
     )
 
+
 class travelDatesObject(CustomObject):
     properties = PropertiesList(
         Property("travel_end_date", StringType),
         Property("travel_start_date", StringType),
     )
+
 
 class travelerObject(CustomObject):
     properties = PropertiesList(
@@ -106,48 +112,50 @@ class travelerObject(CustomObject):
         Property("is_guest", StringType),
         Property("meeting_attendee_group", StringType),
         Property("name", StringType),
-
     )
 
+
 class transactionsObject(CustomObject):
-    properties = ArrayType(PropertiesList(
-        Property("advance_purchase_days", StringType),
-        Property("advance_purchase_window", StringType),
-        Property("ancillary_type", StringType),
-        Property("booking_method", StringType),
-        Property("cabin_class", StringType),
-        Property("cabin_class_name", StringType),
-        Property("class_of_service", StringType),
-        Property("client_code", StringType),
-        Property("company_name", StringType),
-        # Property("custom_data_fields", ObjectType),
-        Property("department", StringType),
-        Property("duration", durationObject),
-        Property("geography_type", StringType),
-        Property("identifier", identifierObject),
-        Property("invoice_date", StringType),
-        Property("is_active", StringType),
-        Property("is_agent_assisted", StringType),
-        Property("is_special_request", StringType),
-        Property("line_of_business", StringType),
-        Property("location", StringType),
-        Property("meeting_name", StringType),
-        Property("parent_client_code", StringType),
-        Property("payment_instrument_info", paymentObject),
-        Property("point_of_sale", StringType),
-        Property("point_of_sale_country", StringType),
-        Property("policy", policyObject),
-        Property("price", priceObject),
-        Property("purchase_count", StringType),
-        Property("rate_type", StringType),
-        Property("segment_count", StringType),
-        Property("ticket_code", StringType),
-        Property("ticket_status", StringType),
-        Property("transaction_date", StringType),
-        Property("transaction_status", StringType),
-        Property("transaction_type", StringType),
-        Property("travel_dates", travelDatesObject),
-        Property("traveler", travelerObject),
-        Property("vendor", StringType),
-        Property("vendor_name", StringType),)
+    properties = ArrayType(
+        PropertiesList(
+            Property("advance_purchase_days", StringType),
+            Property("advance_purchase_window", StringType),
+            Property("ancillary_type", StringType),
+            Property("booking_method", StringType),
+            Property("cabin_class", StringType),
+            Property("cabin_class_name", StringType),
+            Property("class_of_service", StringType),
+            Property("client_code", StringType),
+            Property("company_name", StringType),
+            # Property("custom_data_fields", ObjectType),
+            Property("department", StringType),
+            Property("duration", durationObject),
+            Property("geography_type", StringType),
+            Property("identifier", identifierObject),
+            Property("invoice_date", StringType),
+            Property("is_active", StringType),
+            Property("is_agent_assisted", StringType),
+            Property("is_special_request", StringType),
+            Property("line_of_business", StringType),
+            Property("location", StringType),
+            Property("meeting_name", StringType),
+            Property("parent_client_code", StringType),
+            Property("payment_instrument_info", paymentObject),
+            Property("point_of_sale", StringType),
+            Property("point_of_sale_country", StringType),
+            Property("policy", policyObject),
+            Property("price", priceObject),
+            Property("purchase_count", StringType),
+            Property("rate_type", StringType),
+            Property("segment_count", StringType),
+            Property("ticket_code", StringType),
+            Property("ticket_status", StringType),
+            Property("transaction_date", StringType),
+            Property("transaction_status", StringType),
+            Property("transaction_type", StringType),
+            Property("travel_dates", travelDatesObject),
+            Property("traveler", travelerObject),
+            Property("vendor", StringType),
+            Property("vendor_name", StringType),
         )
+    )

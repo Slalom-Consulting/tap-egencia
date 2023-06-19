@@ -11,21 +11,24 @@ from singer_sdk.typing import (
     StringType,
 )
 
+
 class firstObject(CustomObject):
     properties = PropertiesList(
         Property("href", StringType),
     )
+
 
 class lastObject(CustomObject):
     properties = PropertiesList(
         Property("href", StringType),
     )
 
+
 class linksObject(CustomObject):
     properties = PropertiesList(
-        Property("first", firstObject),
-        Property("last", lastObject)
+        Property("first", firstObject), Property("last", lastObject)
     )
+
 
 class metadataObject(CustomObject):
     properties = PropertiesList(

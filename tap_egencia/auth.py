@@ -2,6 +2,7 @@
 
 from singer_sdk.authenticators import OAuthAuthenticator, SingletonMeta
 
+
 class Auth0Authenticator(OAuthAuthenticator, metaclass=SingletonMeta):
     """Authenticator class for Auth0."""
 
@@ -12,14 +13,14 @@ class Auth0Authenticator(OAuthAuthenticator, metaclass=SingletonMeta):
     @property
     def auth_endpoint(self) -> str:
         return f"{self.domain}/auth/v1/token"
-    
+
     @property
     def client_id(self) -> str:
-        return self.config['client_id']
-    
+        return self.config["client_id"]
+
     @property
     def client_secret(self) -> str:
-        return self.config['client_secret']
+        return self.config["client_secret"]
 
     @property
     def oauth_request_body(self) -> dict:

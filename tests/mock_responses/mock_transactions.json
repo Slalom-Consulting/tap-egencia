@@ -1,121 +1,14 @@
 {
- "links": {
-   "empty": true
- },
- "metadata": {
-   "current_page": 0,
-   "latest_reconciled_date": "string",
-   "page_limit": 0,
-   "total_pages": 0,
-   "total_records": 0
- },
- "report_id": "string",
- "transactions": [
-   {
-     "advance_purchase_days": "string",
-     "advance_purchase_window": "string",
-     "ancillary_type": "string",
-     "booking_method": "string",
-     "cabin_class": "string",
-     "cabin_class_name": "string",
-     "class_of_service": "string",
-     "client_code": "string",
-     "company_name": "string",
-     "custom_data_fields": {},
-     "department": "string",
-     "duration": {
-       "end": "string",
-       "minutes": "string",
-       "start": "string"
-     },
-     "geography_type": "string",
-     "identifier": {
-       "confirmation_number": "string",
-       "invoice_number": "string",
-       "itinerary_number": "string",
-       "pnr": "string",
-       "record_locator": "string",
-       "ticket_number": "string"
-     },
-     "invoice_date": "string",
-     "is_active": "string",
-     "is_agent_assisted": "string",
-     "is_special_request": "string",
-     "line_of_business": "string",
-     "location": "string",
-     "meeting_name": "string",
-     "parent_client_code": "string",
-     "payment_instrument_info": {
-       "credit_card_bin": "string",
-       "credit_card_last4_digits": "string",
-       "credit_card_type": "string"
-     },
-     "point_of_sale": "string",
-     "point_of_sale_country": "string",
-     "policy": {
-       "in_policy": "string",
-       "policy_reason_code": "string",
-       "policy_reason_description": "string"
-     },
-     "price": {
-       "average_leg_amount": "string",
-       "average_leg_price": "string",
-       "average_segment_amount": "string",
-       "average_segment_price": "string",
-       "base": "string",
-       "base_amount": "string",
-       "best_fare_option": "string",
-       "change_fee": "string",
-       "change_fee_amount": "string",
-       "change_fees": "string",
-       "coupon_amount": "string",
-       "extra_guest_charges": "string",
-       "extra_person_amount": "string",
-       "fare_bases": "string",
-       "fee": "string",
-       "fees": "string",
-       "flight_amount": "string",
-       "goodwill_amount": "string",
-       "leg_amount": "string",
-       "lowest_logical_fare": "string",
-       "published_fare": "string",
-       "segment_amount": "string",
-       "tax": "string",
-       "tax_gst": "string",
-       "tax_hst": "string",
-       "tax_qst": "string",
-       "tax_vat": "string",
-       "taxes": "string",
-       "total": "string",
-       "transaction_amount": "string",
-       "transaction_amount_tax_gst": "string",
-       "transaction_amount_tax_hst": "string",
-       "transaction_amount_tax_qst": "string",
-       "transaction_amount_vat": "string",
-       "trip_amount": "string",
-       "true_ticket_amount": "string"
-     },
-     "purchase_count": "string",
-     "rate_type": "string",
-     "segment_count": "string",
-     "ticket_code": "string",
-     "ticket_status": "string",
-     "transaction_date": "string",
-     "transaction_status": "string",
-     "transaction_type": "string",
-     "travel_dates": {
-       "travel_end_date": "string",
-       "travel_start_date": "string"
-     },
-     "traveler": {
-       "email": "string",
-       "group": "string",
-       "is_guest": "string",
-       "meeting_attendee_group": "string",
-       "name": "string"
-     },
-     "vendor": "string",
-     "vendor_name": "string"
-   }
- ]
+  "report_id": "f5d4d0f8-7243-4c2d-b2ab-bce09fbf4053",
+  "metadata": {
+      "page_limit": 1000,
+      "total_records": 80,
+      "total_pages": 1,
+      "latest_reconciled_date": "2023-06-04 00:00:00"
+  },
+  "_links": {
+      "last": {
+          "href": "https://apis.egencia.com/bi/api/v1/transactions/f5d4d0f8-7243-4c2d-b2ab-bce09fbf4053?page=1"
+      }
+  }
 }

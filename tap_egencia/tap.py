@@ -14,6 +14,7 @@ STREAM_TYPES = [
     TransactionsStream,
 ]
 
+
 class TapEgencia(Tap):
     """egencia tap class."""
 
@@ -37,8 +38,9 @@ class TapEgencia(Tap):
         ),
     ).to_dict()
 
-    def discover_streams(self) -> list[Stream]:  
-        return [stream_class(tap=self) for stream_class in STREAM_TYPES]    
+    def discover_streams(self) -> list[Stream]:
+        return [stream_class(tap=self) for stream_class in STREAM_TYPES]
+
 
 if __name__ == "__main__":
     TapEgencia.cli()
