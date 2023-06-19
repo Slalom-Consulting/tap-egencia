@@ -6,15 +6,11 @@ import requests
 
 from pathlib import Path
 
-from singer_sdk import typing as th  # JSON Schema typing helpers
-
-from singer_sdk.helpers.jsonpath import extract_jsonpath
-
 from tap_egencia.client import egenciaStream
 
 from singer_sdk.typing import PropertiesList, Property, StringType
 
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Iterable
 
 
 from tap_egencia.schemas.get_transactions import metadataObject, transactionsObject

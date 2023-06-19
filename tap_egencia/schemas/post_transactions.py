@@ -1,7 +1,3 @@
-from singer_sdk.typing import (
-    PropertiesList,
-    Property,
-)
 from tap_egencia.schemas.utils.custom_objects import CustomObject
 
 from singer_sdk.typing import (
