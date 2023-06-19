@@ -37,9 +37,6 @@ class TransactionsStream(egenciaStream):
         ).to_dict()
     authenticator = None
 
-    def parse_response(self, response: requests.Response) -> Iterable[dict]:
-        return super().parse_response(response)
-
     def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
         authenticator = super().authenticator
         url_base = super().url_base
