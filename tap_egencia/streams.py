@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import requests
+import datetime 
 
 from pathlib import Path
 
@@ -13,7 +14,13 @@ from singer_sdk.typing import PropertiesList, Property, StringType
 from typing import Any, Dict, Iterable
 
 
-from tap_egencia.schemas.get_transactions import metadataObject, transactionsObject
+from tap_egencia.schemas.get_transactions import (
+    metadataObject,
+    transactionsObject
+)
+from tap_egencia.schemas.post_transactions import (
+    linksObject
+)
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
@@ -26,7 +33,8 @@ class TransactionsStream(egenciaStream):
         Property("report_id", StringType),
         Property("metadata", metadataObject),
         Property("transactions", transactionsObject),
-    ).to_dict()
+        Property("_links", linksObject)
+        ).to_dict()
     authenticator = None
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
@@ -35,15 +43,26 @@ class TransactionsStream(egenciaStream):
     def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
         authenticator = super().authenticator
         url_base = super().url_base
+        start_date = super().start_date
+        end_date = super().end_date
 
+        today = datetime.datetime.now()
+        n_days_ago = datetime.datetime.now() - datetime.timedelta(7)
+
+        
         self.path = "/bi/api/v1/transactions"
-        start_date = self.config["start_date"]
-        end_date = self.config["end_date"]
+
 
         session = requests.Session()
         session.headers = authenticator.auth_headers
         session.headers["Accept"] = "application/hal+json"
         session.headers["Content-Type"] = "application/json"
+
+        if start_date == None:
+            start_date = n_days_ago.strftime("%Y-%m-%d %H:%M:%S")
+   
+        if end_date == None:
+            end_date = today.strftime("%Y-%m-%d %H:%M:%S")
 
         self.body = {"start_date": f"{start_date}", "end_date": f"{end_date}"}
 
@@ -51,7 +70,9 @@ class TransactionsStream(egenciaStream):
             requests.Request(method="POST", url=url_base + self.path, json=self.body)
         )
 
+
         post_transaction_response = self._request(post_transaction_request, None)
+
         report_id = post_transaction_response.json()["report_id"]
         total_pages = post_transaction_response.json()["metadata"]["total_pages"]
 
@@ -63,6 +84,7 @@ class TransactionsStream(egenciaStream):
                 url_base + self.path,
             ),
         )
+
 
         get_transaction_response = self._request(get_transaction_request, None)
 

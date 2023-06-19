@@ -22,3 +22,19 @@ class egenciaStream(RESTStream):
     def authenticator(self) -> Auth0Authenticator:
         """Return a new authenticator object."""
         return Auth0Authenticator.create_for_stream(self)
+
+    @property
+    def start_date(self) -> str | None:
+        try:
+            date = self.config['start_date']
+        except:
+            date = None
+        return date
+    
+    @property
+    def end_date(self) -> str | None:
+        try:
+            date = self.config['end_date']
+        except:
+            date = None
+        return date
