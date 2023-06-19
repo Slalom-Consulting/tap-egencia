@@ -38,7 +38,7 @@ class TransactionsStream(egenciaStream):
     authenticator = None
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
-        return [] if response.status_code == 400 else super().parse_response(response)
+        return super().parse_response(response)
 
     def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
         authenticator = super().authenticator
@@ -88,4 +88,21 @@ class TransactionsStream(egenciaStream):
 
         get_transaction_response = self._request(get_transaction_request, None)
 
-        return super().parse_response(get_transaction_response)
+        match get_transaction_response.status_code:
+            case 200:
+                return super().parse_response(get_transaction_response)
+            case 400:
+                raise Exception('Bad Request: Invalid input or request')
+            case 401:
+                raise Exception("Unauthorized: authentication token empty, invalid or expired")
+            case 403:
+                raise Exception("Forbidden: User not Validated for operation")
+            case 405:
+                raise Exception("Client Error: Method Not Allowed for path")
+            case 422:
+                raise Exception("Invalid input: invalid or missing required input")
+            case 500:
+                raise Exception("Internal Server Error: unable to process request.")
+            case _:
+                raise Exception(get_transaction_response.status_code)
+
