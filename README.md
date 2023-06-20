@@ -5,45 +5,25 @@ Singer tap for the Egencia REST API
 
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
-<!--
-
-Developer TODO: Update the below as needed to correctly describe the install procedure. For instance, if you do not have a PyPi repo, or if you want users to directly install from your git repo, you can modify this step as appropriate.
-
-## Installation
-
-Install from PyPi:
-
-```bash
-pipx install tap-egencia
-```
-
-Install from GitHub:
-
-```bash
-pipx install git+https://github.com/ORG_NAME/tap-egencia.git@main
-```
-
--->
 
 ## Configuration
 
 ### Accepted Config Options
 
-<!--
-Developer TODO: Provide a list of config options accepted by the tap.
-
-This section can be created by copy-pasting the CLI output from:
+List of tap-egencia config values
 
 ```
-tap-egencia --about --format=markdown
-```
--->
+  start_date: ${START_DATE}
+    required: false
+  end_date: ${END_DATE}
+    required: false
+  egencia_base_url: ${EGENCIA_BASE_URL}
+    required: true
+  client_id: ${EGENCIA_CLIENT_ID}
+    required: true
+  client_secret: ${EGENCIA_SECRET_ID}
+    required: true
 
-A full list of supported settings and capabilities for this
-tap is available by running:
-
-```bash
-tap-egencia --about
 ```
 
 ### Configure using environment variables
@@ -54,9 +34,7 @@ environment variable is set either in the terminal context or in the `.env` file
 
 ### Source Authentication and Authorization
 
-<!--
-Developer TODO: If your tap requires special access on the source system, or any special authentication requirements, provide those here.
--->
+Egencia API requies OAuth authentication. client_Id & client_secret passed as configs are required for authentication. 
 
 ## Usage
 
@@ -96,16 +74,6 @@ You can also test the `tap-egencia` CLI interface directly using `poetry run`:
 poetry run tap-egencia --help
 ```
 
-### Testing with [Meltano](https://www.meltano.com)
-
-_**Note:** This tap will work in any Singer environment and does not require Meltano.
-Examples here are for convenience and to streamline end-to-end orchestration scenarios._
-
-<!--
-Developer TODO:
-Your project comes with a custom `meltano.yml` project file already created. Open the `meltano.yml` and follow any "TODO" items listed in
-the file.
--->
 
 Next, install Meltano (if you haven't already) and any needed plugins:
 
@@ -123,10 +91,16 @@ Now you can test and orchestrate using Meltano:
 # Test invocation:
 meltano invoke tap-egencia --version
 # OR run a test `elt` pipeline:
-meltano elt tap-egencia target-jsonl
+meltano run tap-egencia target-jsonl
 ```
 
 ### SDK Dev Guide
 
 See the [dev guide](https://sdk.meltano.com/en/latest/dev_guide.html) for more instructions on how to use the SDK to
 develop your own taps and targets.
+
+## Dev Notes
+
+Singer taps require schema declaration for extraction. If fields pulled from the API are not listed in the schema documentation the extraction will throw an error. However default behavior for listed schema values are set to `require=false`. Expected output values have been added to the transaction stream schema which do not show up in the current extraction job but however may down the line. consider this when building future tap streams. 
+
+Schema creation can be be found under `./Schema` using the `CustomObject` util to structure the schema to the Singer data structure requirement.

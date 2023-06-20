@@ -1,0 +1,14 @@
+{
+  "report_id": "f5d4d0f8-7243-4c2d-b2ab-bce09fbf4053",
+  "metadata": {
+      "page_limit": 1000,
+      "total_records": 80,
+      "total_pages": 1,
+      "latest_reconciled_date": "2023-06-04 00:00:00"
+  },
+  "_links": {
+      "last": {
+          "href": "https://apis.egencia.com/bi/api/v1/transactions/f5d4d0f8-7243-4c2d-b2ab-bce09fbf4053?page=1"
+      }
+  }
+}

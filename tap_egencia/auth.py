@@ -1,44 +1,39 @@
-"""egencia Authentication."""
-
-from __future__ import annotations
+"""Auth0 Authentication."""
 
 from singer_sdk.authenticators import OAuthAuthenticator, SingletonMeta
 
 
-# The SingletonMeta metaclass makes your streams reuse the same authenticator instance.
-# If this behaviour interferes with your use-case, you can remove the metaclass.
-class egenciaAuthenticator(OAuthAuthenticator, metaclass=SingletonMeta):
-    """Authenticator class for egencia."""
+class Auth0Authenticator(OAuthAuthenticator, metaclass=SingletonMeta):
+    """Authenticator class for Auth0."""
+
+    @property
+    def domain(self) -> str:
+        return self.config["egencia_base_url"]
+
+    @property
+    def auth_endpoint(self) -> str:
+        return f"{self.domain}/auth/v1/token"
+
+    @property
+    def client_id(self) -> str:
+        return self.config["client_id"]
+
+    @property
+    def client_secret(self) -> str:
+        return self.config["client_secret"]
 
     @property
     def oauth_request_body(self) -> dict:
-        """Define the OAuth request body for the AutomaticTestTap API.
+        """Define the OAuth request body for the Auth0 API."""
 
-        Returns:
-            A dict with the request body
-        """
-        # TODO: Define the request body needed for the API.
         return {
-            'resource': 'https://analysis.windows.net/powerbi/api',
-            'scope': self.oauth_scopes,
-            'client_id': self.config["client_id"],
-            'username': self.config["username"],
-            'password': self.config["password"],
-            'grant_type': 'password',
+            "grant_type": "client_credentials",
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
         }
 
     @classmethod
-    def create_for_stream(cls, stream) -> "egenciaAuthenticator":
-        """Instantiate an authenticator for a specific Singer stream.
-
-        Args:
-            stream: The Singer stream instance.
-
-        Returns:
-            A new authenticator.
-        """
+    def create_for_stream(cls, stream) -> "Auth0Authenticator":
         return cls(
             stream=stream,
-            auth_endpoint="TODO: OAuth Endpoint URL",
-            oauth_scopes="TODO: OAuth Scopes",
         )
