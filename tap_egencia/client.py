@@ -25,16 +25,17 @@ class egenciaStream(RESTStream):
 
     @property
     def start_date(self) -> str | None:
-        try:
+        if self.config['start_date'] != '':
             date = self.config['start_date']
-        except:
+        else: 
             date = None
+
         return date
     
     @property
     def end_date(self) -> str | None:
-        try:
+        if self.config['end_date'] != '':
             date = self.config['end_date']
-        except:
+        else: 
             date = None
         return date

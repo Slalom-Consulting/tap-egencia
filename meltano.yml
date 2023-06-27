@@ -1,9 +1,9 @@
 version: 1
 send_anonymous_usage_stats: true
 project_id: "tap-egencia"
-default_environment: dev
+default_environment: "dev"
 environments:
-- name: dev
+- name: "dev"
 plugins:
   extractors:
   - name: "tap-egencia"
@@ -13,12 +13,19 @@ plugins:
     - about
     - stream-maps
     config:
-      start_date: ${START_DATE}
-      end_date: ${END_DATE}
-      egencia_base_url: ${EGENCIA_BASE_URL}
-      client_id: ${EGENCIA_CLIENT_ID}
-      client_secret: ${EGENCIA_SECRET_ID}
+      "start_date": 
+    settings:
+      - name: "client_id"
+        kind: password
+      - name: "client_secret"
+        kind: password
+      - name: "end_date"
+        kind: string
+      - name: "start_date"
+        kind: string
+      - name: "egencia_base_url"
+        kind: string
   loaders:
-  - name: target-jsonl
-    variant: andyh1203
-    pip_url: target-jsonl
+  - name: "target-jsonl"
+    variant: "andyh1203"
+    pip_url: "target-jsonl"
