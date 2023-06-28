@@ -39,11 +39,6 @@ class TransactionsStream(egenciaStream):
         ).to_dict()
     authenticator = None
 
-    def dict_to_binary(the_dict):
-        str = json.dumps(the_dict)
-        binary = ' '.join(format(ord(letter), 'b') for letter in str)
-        return binary
-
     def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
         authenticator = super().authenticator
         url_base = super().url_base
