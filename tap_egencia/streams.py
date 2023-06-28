@@ -6,6 +6,7 @@ import requests
 import datetime 
 
 from pathlib import Path
+import json
 
 from tap_egencia.client import egenciaStream
 
@@ -30,6 +31,7 @@ class TransactionsStream(egenciaStream):
 
     name = "transactions-api"
     schema = PropertiesList(
+        Property("failure-response", StringType),
         Property("report_id", StringType),
         Property("metadata", metadataObject),
         Property("transactions", transactionsObject),
@@ -67,37 +69,48 @@ class TransactionsStream(egenciaStream):
 
         post_transaction_response = self._request(post_transaction_request, None)
 
-        report_id = post_transaction_response.json()["report_id"]
-        total_pages = post_transaction_response.json()["metadata"]["total_pages"]
+        if post_transaction_response.status_code != 201:
+            replacementContent = { "failure-response": f"{post_transaction_response.status_code} - {post_transaction_response.reason}", "report_id": "", "metadata": {}, "transactions": [], "_links": {}}
+            
+            json_response = json.dumps(replacementContent)
+            byte_response = json_response.encode()
+            post_transaction_response._content = byte_response
 
-        self.path = f"/bi/api/v1/transactions/{report_id}?page={total_pages}"
+            return super().parse_response(post_transaction_response)
 
-        get_transaction_request = session.prepare_request(
-            requests.Request(
-                "GET",
-                url_base + self.path,
-            ),
-        )
+        else:
+
+            report_id = post_transaction_response.json()["report_id"]
+            total_pages = post_transaction_response.json()["metadata"]["total_pages"]
+
+            self.path = f"/bi/api/v1/transactions/{report_id}?page={total_pages}"
+
+            get_transaction_request = session.prepare_request(
+                requests.Request(
+                    "GET",
+                    url_base + self.path,
+                ),
+            )
 
 
-        get_transaction_response = self._request(get_transaction_request, None)
+            get_transaction_response = self._request(get_transaction_request, None)
 
-        match get_transaction_response.status_code:
-            case 200:
-                return super().parse_response(get_transaction_response)
-            case 400:
-                raise Exception('Bad Request: Invalid input or request')
-            case 401:
-                raise Exception("Unauthorized: authentication token empty, invalid or expired")
-            case 403:
-                raise Exception("Forbidden: User not Validated for operation")
-            case 405:
-                raise Exception("Client Error: Method Not Allowed for path")
-            case 422:
-                raise Exception("Invalid input: invalid or missing required input")
-            case 500:
-                raise Exception("Internal Server Error: unable to process request.")
-            case _:
-            # Return Status Code, Textual Reason for error and response body of error if occurance not listed above
-                raise Exception(get_transaction_response.status_code, get_transaction_response.reason, get_transaction_response.content)
+            match get_transaction_response.status_code:
+                case 200:
+                    return super().parse_response(get_transaction_response)
+                case 400:
+                    raise Exception('Bad Request: Invalid input or request')
+                case 401:
+                    raise Exception("Unauthorized: authentication token empty, invalid or expired")
+                case 403:
+                    raise Exception("Forbidden: User not Validated for operation")
+                case 405:
+                    raise Exception("Client Error: Method Not Allowed for path")
+                case 422:
+                    raise Exception("Invalid input: invalid or missing required input")
+                case 500:
+                    raise Exception("Internal Server Error: unable to process request.")
+                case _:
+                # Return Status Code, Textual Reason for error and response body of error if occurance not listed above
+                    raise Exception(get_transaction_response.status_code, get_transaction_response.reason, get_transaction_response.content)
 
