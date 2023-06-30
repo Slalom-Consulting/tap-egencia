@@ -12,8 +12,6 @@ plugins:
     capabilities:
     - about
     - stream-maps
-    config:
-      "start_date": 
     settings:
       - name: "client_id"
         kind: password
@@ -25,6 +23,9 @@ plugins:
         kind: string
       - name: "egencia_base_url"
         kind: string
+    config:
+      start_date: ""
+      end_date: ""
   loaders:
   - name: "target-jsonl"
     variant: "andyh1203"
