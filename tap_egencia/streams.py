@@ -16,11 +16,14 @@ from typing import Any, Dict, Iterable
 
 
 from tap_egencia.schemas.get_transactions import (
-    metadataObject,
-    transactionsObject
-)
-from tap_egencia.schemas.post_transactions import (
-    linksObject
+    paymentObject,
+    policyObject,
+    priceObject,
+    travelDatesObject,
+    travelerObject,
+    customDataFieldsObject,
+    durationObject,
+    identifierObject
 )
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
@@ -31,12 +34,45 @@ class TransactionsStream(egenciaStream):
 
     name = "transactions-api"
     schema = PropertiesList(
-        Property("failure-response", StringType),
-        Property("report_id", StringType),
-        Property("metadata", metadataObject),
-        Property("transactions", transactionsObject),
-        Property("_links", linksObject)
-        ).to_dict()
+        Property("traveler", travelerObject),
+        Property("advance_purchase_days", StringType),
+        Property("advance_purchase_window", StringType),
+        Property("ancillary_type", StringType),
+        Property("booking_method", StringType),
+        Property("custom_data_fields", customDataFieldsObject),
+        Property("cabin_class_name", StringType),
+        Property("class_of_service", StringType),
+        Property("client_code", StringType),
+        Property("company_name", StringType),
+        Property("department", StringType),
+        Property("duration", durationObject),
+        Property("geography_type", StringType),
+        Property("identifier", identifierObject),
+        Property("invoice_date", StringType),
+        Property("is_active", StringType),
+        Property("is_agent_assisted", StringType),
+        Property("is_special_request", StringType),
+        Property("line_of_business", StringType),
+        Property("location", StringType),
+        Property("meeting_name", StringType),
+        Property("parent_client_code", StringType),
+        Property("payment_instrument_info", paymentObject),
+        Property("point_of_sale", StringType),
+        Property("point_of_sale_country", StringType),
+        Property("policy", policyObject),
+        Property("price", priceObject),
+        Property("purchase_count", StringType),
+        Property("rate_type", StringType),
+        Property("segment_count", StringType),
+        Property("ticket_code", StringType),
+        Property("ticket_status", StringType),
+        Property("transaction_date", StringType),
+        Property("transaction_status", StringType),
+        Property("transaction_type", StringType),
+        Property("travel_dates", travelDatesObject),
+        Property("vendor", StringType),
+        Property("vendor_name", StringType)
+    ).to_dict()
     authenticator = None
 
     def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
@@ -92,12 +128,11 @@ class TransactionsStream(egenciaStream):
                 ),
             )
 
-
             get_transaction_response = self._request(get_transaction_request, None)
 
             match get_transaction_response.status_code:
                 case 200:
-                    return super().parse_response(get_transaction_response)
+                    return iter(json.loads(get_transaction_response.content.decode())["transactions"])
                 case 400:
                     raise Exception('Bad Request: Invalid input or request')
                 case 401:
