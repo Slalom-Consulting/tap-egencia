@@ -23,14 +23,6 @@ plugins:
         kind: string
       - name: "egencia_base_url"
         kind: string
-    config:
-      client_id: $CLIENT_ID
-      client_secret: $CLIENT_SECRET
-      end_date: $END_DATE
-      start_date: $START_DATE
-      egencia_base_url: $EGENCIA_BASE_URL
-      # start_date: ""
-      # end_date: ""
   loaders:
   - name: "target-jsonl"
     variant: "andyh1203"
