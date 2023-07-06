@@ -23,6 +23,9 @@ plugins:
         kind: string
       - name: "egencia_base_url"
         kind: string
+    config:
+      start_date: ""
+      end_date: ""
   loaders:
   - name: "target-jsonl"
     variant: "andyh1203"
