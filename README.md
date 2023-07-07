@@ -13,15 +13,15 @@ Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 List of tap-egencia config values
 
 ```
-  start_date: ${START_DATE}
+  start_date: ${TAP_EGENCIA_START_DATE}
     required: false
-  end_date: ${END_DATE}
+  end_date: ${TAP_EGENCIA_END_DATE}
     required: false
-  egencia_base_url: ${EGENCIA_BASE_URL}
+  egencia_base_url: ${TAP_EGENCIA_EGENCIA_BASE_URL}
     required: true
-  client_id: ${EGENCIA_CLIENT_ID}
+  client_id: ${TAP_EGENCIA_EGENCIA_CLIENT_ID}
     required: true
-  client_secret: ${EGENCIA_SECRET_ID}
+  client_secret: ${TAP_EGENCIA_EGENCIA_SECRET_ID}
     required: true
 
 ```

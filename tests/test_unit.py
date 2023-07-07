@@ -14,4 +14,4 @@ class TestTapEgenciaSync(unittest.TestCase):
         catalog = TapEgencia().discover_streams()
 
         # expect valid catalog to be discovered
-        self.assertEqual(len(catalog), 1, "Total streams from default catalog")
+        self.assertEqual(len(catalog), 2, "Total streams from default catalog")
