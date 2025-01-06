@@ -4,117 +4,138 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, Iterable
 
+import typing as t
 import requests
 import datetime
+from urllib.parse import parse_qsl
 
+from singer_sdk.helpers.jsonpath import extract_jsonpath
 from pathlib import Path
 from singer_sdk.streams import RESTStream
+from singer_sdk.pagination import BaseHATEOASPaginator 
 
 from tap_egencia.auth import Auth0Authenticator
 
+if t.TYPE_CHECKING:
+    import requests
+    from singer_sdk_helpers.types import Auth, Context
+
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
+class HATEOASPaginator(BaseHATEOASPaginator):
+    def get_next_url(self,response):
+        data = response.json()
+        if 'next' in data['_links']:
+            return data['_links']['next']['href']
+        else:
+            return None
 
 class egenciaStream(RESTStream):
     """egencia stream class."""
 
+    report_id = ""
+    records_jsonpath = "$[transactions][*]"
+
     @property
     def url_base(self) -> str:
-        domain = self.config["egencia_base_url"]
-        return domain
+        return self.config["egencia_base_url"]
 
     @property
     def authenticator(self) -> Auth0Authenticator:
         """Return a new authenticator object."""
         return Auth0Authenticator.create_for_stream(self)
 
+    def get_new_paginator(self) -> BaseHATEOASPaginator:
+        return HATEOASPaginator()
+    
     @property
-    def start_date(self) -> str | None:
-        if self.config['start_date'] != '':
-            date = self.config['start_date']
-        else: 
-            date = None
+    def http_headers(self) -> dict:
+        """Return the http headers needed.
 
-        return date
+        Returns:
+            A dictionary of HTTP headers.
+        """
+        headers = {}
+        if "user_agent" in self.config:
+            headers["User-Agent"] = self.config.get("user_agent")
+        headers["accept"] = "application/hal+json"
+        headers["Content-Type"] = "application/json"
+
+        return headers
     
-    @property
-    def end_date(self) -> str | None:
-        if self.config['end_date'] != '':
-            date = self.config['end_date']
-        else: 
-            date = None
-        return date
+    def get_url_params(self, context, next_page_token) -> dict:
+
+        params: dict = {}
+
+        if next_page_token:
+            self.logger.info(f'next_page_token: {next_page_token}')
+            return dict(parse_qsl(next_page_token.query))
+        else:
+            self.logger.info('First Time Run')
+            params['page'] = 1
+        self.logger.info(f'PARAMS:{params}')
+        return params
     
-    def get_records(self, *args, **kwargs) -> Iterable[Dict[str, Any]]:
-        # authenticator = super().authenticator
-        # url_base = super().url_base
-        # start_date = super().start_date
-        # end_date = super().end_date
-        
-        self.path = "/bi/api/v1/transactions"
+    def get_report_id(self,context):
 
         session = requests.Session()
         session.headers = self.authenticator.auth_headers
         session.headers["Accept"] = "application/hal+json"
         session.headers["Content-Type"] = "application/json"
 
-        if self.start_date == None:
-            n_days_ago = datetime.datetime.now() - datetime.timedelta(7)
-            self.start_date = n_days_ago.strftime("%Y-%m-%d %H:%M:%S")
-   
-        if self.end_date == None:
-            today = datetime.datetime.now()
-            self.end_date = today.strftime("%Y-%m-%d %H:%M:%S")
+        self.start_date = self.get_starting_timestamp(context)
+        self.start_date = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
 
+        today = datetime.datetime.now()
+        self.end_date = today.strftime("%Y-%m-%d %H:%M:%S")
+        self.logger.info(f'start_date: {self.start_date}, end_date {self.end_date}')
         self.body = {"start_date": f"{self.start_date}", "end_date": f"{self.end_date}"}
 
         post_transaction_request = session.prepare_request(
             requests.Request(method="POST", url=self.url_base + self.path, json=self.body)
         )
-
-
         post_transaction_response = self._request(post_transaction_request, None)
 
         if post_transaction_response.status_code != 201:
-            replacementContent = { "failure-response": f"{post_transaction_response.status_code} - {post_transaction_response.reason}", "report_id": "", "metadata": {}, "transactions": [], "_links": {}}
-            
-            json_response = json.dumps(replacementContent)
-            byte_response = json_response.encode()
-            post_transaction_response._content = byte_response
+            raise Exception(f'Report was not created successfully. Status Code {post_transaction_response.status_code}')
+        report_id = post_transaction_response.json()["report_id"]
 
-            return super().parse_response(post_transaction_response)
+        return report_id
 
-        else:
+    def get_url(self, context: Context | None) -> str:
 
-            report_id = post_transaction_response.json()["report_id"]
-            total_pages = post_transaction_response.json()["metadata"]["total_pages"]
+        url = "".join([self.url_base, self.path or ""])
+        self.logger.info(f"report_id: {self.report_id}")
+        if self.report_id == "":
+            self.report_id = self.get_report_id(context)
+        url = f"{url}/{self.report_id}"
+        self.logger.info(f'URL: {url}')
+        return url
+    
+    def parse_response(self, response: requests.Response) -> t.Iterable[dict]:
+        """Parse the response and return an iterator of result records.
 
-            self.path = f"/bi/api/v1/transactions/{report_id}?page={total_pages}"
+        Args:
+            response: The HTTP ``requests.Response`` object.
 
-            get_transaction_request = session.prepare_request(
-                requests.Request(
-                    "GET",
-                    self.url_base + self.path,
-                ),
-            )
+        Yields:
+            Each record from the source.
+        """
+        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
-            get_transaction_response = self._request(get_transaction_request, None)
+    def post_process(
+            self,
+            row: dict,
+            context: Context | None = None,  # noqa: ARG002
+        ) -> dict | None:
+            """As needed, append or transform raw data to match expected structure.
 
-            match get_transaction_response.status_code:
-                case 200:
-                    return self.parse_response(get_transaction_response)
-                case 400:
-                    raise Exception('Bad Request: Invalid input or request')
-                case 401:
-                    raise Exception("Unauthorized: authentication token empty, invalid or expired")
-                case 403:
-                    raise Exception("Forbidden: User not Validated for operation")
-                case 405:
-                    raise Exception("Client Error: Method Not Allowed for path")
-                case 422:
-                    raise Exception("Invalid input: invalid or missing required input")
-                case 500:
-                    raise Exception("Internal Server Error: unable to process request.")
-                case _:
-                # Return Status Code, Textual Reason for error and response body of error if occurance not listed above
-                    raise Exception(get_transaction_response.status_code, get_transaction_response.reason, get_transaction_response.content)
+            Args:
+                row: An individual record from the stream.
+                context: The stream context.
+
+            Returns:
+                The updated record dictionary, or ``None`` to skip the record.
+            """
+            row['last_extracted_date'] = self.end_date
+            return row

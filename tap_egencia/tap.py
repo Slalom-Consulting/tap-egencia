@@ -7,13 +7,13 @@ from singer_sdk import typing as th  # JSON schema typing helpers
 
 
 from tap_egencia.streams import (
-    TransactionsStream,
-    TransactionsResponseStream
+    AirTransactionsStream,
+    # TransactionsResponseStream
 )
 
 STREAM_TYPES = [
-    TransactionsStream,
-    TransactionsResponseStream
+    AirTransactionsStream,
+    # TransactionsResponseStream
 ]
 
 
@@ -27,11 +27,6 @@ class TapEgencia(Tap):
             "start_date",
             th.DateTimeType,
             description="The start record date to sync",
-        ),
-        th.Property(
-            "end_date",
-            th.DateTimeType,
-            description="The end record date to sync",
         ),
         th.Property(
             "egencia_base_url",
