@@ -88,14 +88,14 @@ class egenciaStream(RESTStream):
 
         today = datetime.datetime.now()
         self.end_date = today.strftime("%Y-%m-%d %H:%M:%S")
-        self.logger.info(f'start_date: {self.start_date}, end_date {self.end_date}')
+        self.logger.info(f'start_date: {self.start_date}, end_date: {self.end_date}, lob: {self.lob}')
         self.body = {"start_date": f"{self.start_date}", "end_date": f"{self.end_date}"}
-
+        if self.reconciled_records_only:
+            self.body['reconciled_records_only'] = 'true'
         post_transaction_request = session.prepare_request(
-            requests.Request(method="POST", url=self.url_base + self.path, json=self.body)
+            requests.Request(method="POST", url=self.url_base + self.path + self.lob, json=self.body)
         )
         post_transaction_response = self._request(post_transaction_request, None)
-
         if post_transaction_response.status_code != 201:
             raise Exception(f'Report was not created successfully. Status Code {post_transaction_response.status_code}')
         report_id = post_transaction_response.json()["report_id"]

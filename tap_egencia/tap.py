@@ -8,12 +8,22 @@ from singer_sdk import typing as th  # JSON schema typing helpers
 
 from tap_egencia.streams import (
     AirTransactionsStream,
-    # TransactionsResponseStream
+    HotelTransactionsStream,
+    TrainTransactionsStream,
+    CarTransactionsStream,
+    GroundTransactionsStream,
+    FeeTransactionsStream,
+    ReconciledAirTransactionsStream
 )
 
 STREAM_TYPES = [
     AirTransactionsStream,
-    # TransactionsResponseStream
+    HotelTransactionsStream,
+    TrainTransactionsStream,
+    CarTransactionsStream,
+    GroundTransactionsStream,
+    FeeTransactionsStream,
+    ReconciledAirTransactionsStream
 ]
 
 
