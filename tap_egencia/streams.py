@@ -21,6 +21,7 @@ class AirTransactionsStream(egenciaStream):
     path = "/bi/api/v1/transactions/"
     lob  = "air"
     replication_key = "last_extracted_date"
+    reconciled_records_only = False
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
         th.Property("traveler",th.ObjectType(
@@ -159,6 +160,7 @@ class ReconciledAirTransactionsStream(egenciaStream):
     path = "/bi/api/v1/transactions/"
     lob  = "air"
     replication_key = "last_extracted_date"
+    reconciled_records_only = True
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
         th.Property("traveler",th.ObjectType(
@@ -298,6 +300,7 @@ class HotelTransactionsStream(egenciaStream):
     path = "/bi/api/v1/transactions/"
     lob  = "hotel"
     replication_key = "last_extracted_date"
+    reconciled_records_only = False
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
         th.Property("address",th.ObjectType(
@@ -423,6 +426,7 @@ class TrainTransactionsStream(egenciaStream):
     path = "/bi/api/v1/transactions/"
     lob  = "train"
     replication_key = "last_extracted_date"
+    reconciled_records_only = False
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
         th.Property("advance_purchase_days", th.StringType),
@@ -578,6 +582,7 @@ class CarTransactionsStream(egenciaStream):
     path = "/bi/api/v1/transactions/"
     lob  = "car"
     replication_key = "last_extracted_date"
+    reconciled_records_only = False
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
     	th.Property("company_name", th.StringType),
@@ -683,6 +688,7 @@ class GroundTransactionsStream(egenciaStream):
     path = "/bi/api/v1/transactions/"
     lob  = "ground"
     replication_key = "last_extracted_date"
+    reconciled_records_only = False
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
         th.Property("company_name", th.StringType),
@@ -755,6 +761,7 @@ class FeeTransactionsStream(egenciaStream):
     path = "/bi/api/v1/transactions/"
     lob  = "fees"
     replication_key = "last_extracted_date"
+    reconciled_records_only = False
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
         th.Property("company_name", th.StringType),
