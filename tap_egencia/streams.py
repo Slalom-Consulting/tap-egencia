@@ -156,7 +156,7 @@ class AirTransactionsStream(egenciaStream):
 class ReconciledAirTransactionsStream(egenciaStream):
     """Define reporting/transactions stream."""
 
-    name = "air"
+    name = "reconciled_air"
     path = "/bi/api/v1/transactions/"
     lob  = "air"
     replication_key = "last_extracted_date"
