@@ -79,11 +79,6 @@ class AirTransactionsStream(egenciaStream):
         )),
         th.Property("ticket_code", th.StringType),
         th.Property("client_code", th.StringType),
-        th.Property("payment_instrument_info",th.ObjectType(
-            th.Property("credit_card_type", th.StringType),
-            th.Property("credit_card_bin", th.StringType),
-            th.Property("credit_card_last4_digits", th.StringType),
-        )),
         th.Property("travel_dates",th.ObjectType(
             th.Property("travel_start_date", th.StringType),
             th.Property("travel_end_date", th.StringType),
@@ -218,11 +213,6 @@ class ReconciledAirTransactionsStream(egenciaStream):
         )),
         th.Property("ticket_code", th.StringType),
         th.Property("client_code", th.StringType),
-        th.Property("payment_instrument_info",th.ObjectType(
-            th.Property("credit_card_type", th.StringType),
-            th.Property("credit_card_bin", th.StringType),
-            th.Property("credit_card_last4_digits", th.StringType),
-        )),
         th.Property("travel_dates",th.ObjectType(
             th.Property("travel_start_date", th.StringType),
             th.Property("travel_end_date", th.StringType),
@@ -334,11 +324,6 @@ class HotelTransactionsStream(egenciaStream):
         th.Property("hotel_airport_code", th.StringType),
         th.Property("hotel_night_rate", th.StringType),
         th.Property("credit_card_type", th.StringType),
-        th.Property("payment_instrument_info",th.ObjectType(
-            th.Property("credit_card_type", th.StringType),
-            th.Property("credit_card_bin", th.StringType),
-            th.Property("credit_card_last4_digits", th.StringType),
-        )),
         th.Property("hotel_room_count", th.StringType),
         th.Property("room_count", th.StringType),
         th.Property("lowest_published_rate", th.StringType),
@@ -528,11 +513,6 @@ class TrainTransactionsStream(egenciaStream):
             th.Property("policy_reason_code", th.StringType),
             th.Property("policy_reason_description", th.StringType),
         )),
-        th.Property("payment_instrument_info",th.ObjectType(
-            th.Property("credit_card_type", th.StringType),
-            th.Property("credit_card_bin", th.StringType),
-            th.Property("credit_card_last4_digits", th.StringType),
-        )),
         th.Property("price",th.ObjectType(
             th.Property("leg_amount", th.StringType),
             th.Property("trip_amount", th.StringType),
@@ -653,11 +633,6 @@ class CarTransactionsStream(egenciaStream):
             th.Property("in_policy", th.StringType),
             th.Property("policy_reason_code", th.StringType),
             th.Property("policy_reason_description", th.StringType),
-        )),
-        th.Property("payment_instrument_info",th.ObjectType(
-            th.Property("credit_card_type", th.StringType),
-            th.Property("credit_card_bin", th.StringType),
-            th.Property("credit_card_last4_digits", th.StringType),
         )),
         th.Property("price",th.ObjectType(
             th.Property("base_amount", th.StringType),
@@ -825,9 +800,6 @@ class FeeTransactionsStream(egenciaStream):
             th.Property("tax_gst", th.StringType),
             th.Property("tax_hst", th.StringType),
             th.Property("tax_qst", th.StringType),
-        )),
-        th.Property("payment_instrument_info",th.ObjectType(
-            th.Property("credit_card_type", th.StringType)
         )),
         th.Property("transaction_date", th.StringType),
         th.Property("traveler",th.ObjectType(
