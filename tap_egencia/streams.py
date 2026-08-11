@@ -156,6 +156,12 @@ class ReconciledAirTransactionsStream(egenciaStream):
     lob  = "air"
     replication_key = "last_extracted_date"
     reconciled_records_only = True
+    # Reconciliation runs ~2 weeks behind the transaction date (the report
+    # metadata carries it as latest_reconciled_date), so a bookmark-driven window
+    # would always land in a period with nothing reconciled yet. Pull a rolling
+    # window instead and let the downstream unique_key dedup absorb the overlap.
+    # 364 days is the widest window the API accepts.
+    lookback_days = 364
     schema = th.PropertiesList(
         th.Property("last_extracted_date", th.DateTimeType),
         th.Property("traveler",th.ObjectType(
